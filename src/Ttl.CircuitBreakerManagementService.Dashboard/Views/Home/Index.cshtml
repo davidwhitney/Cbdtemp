@@ -1,0 +1,145 @@
+﻿@model Ttl.CircuitBreakerManagementService.Dashboard.DashboardViewModel
+<!doctype html>
+<html>
+<head>
+    <title>Circuit Breaker Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="Scripts/html5shiv.js"></script>
+    <![endif]-->
+    
+    <link rel="stylesheet" type="text/css" href="~/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="~/css/dashboard.css">
+    <style ></style>
+</head>
+<body>
+    <section id="circuits">
+        <header>
+            <div class="toolbar form-inline">
+                <div class="orderBy">
+                    <label>Order by:</label>
+                    <div class="btn-group">
+                        <button data-bind="click: orderByStatus" class="btn">status</button>
+                        <button data-bind="click: orderByName" class="btn">name</button>
+                        <button data-bind="click: orderByTotalAttempted" class="btn">total attempted</button>
+                        <button data-bind="click: orderByTotalFailed" class="btn">total failed</button>
+                        <button data-bind="click: orderByTotalSucceeded" class="btn">total succeeded</button>
+                    </div>
+                </div>
+                <div class="filterBy">
+                    <label>Filter by:</label>
+                    <input type="search" placeholder="Enter filter text here..." data-mini="true" data-bind="value: filterText, valueUpdate: 'keyup'" class="search-query" />
+                </div>
+            </div>
+        </header>
+        <div class="content">
+            <ul data-bind="template: { name: 'circuitTemplate', foreach: breakers, afterRender: updateVisualisations }" id="circuitList"></ul>
+        </div>
+        @if (Model.IsAdminRole)
+        {
+            <footer>
+                <div class="toolbar form-inline">
+                    <button data-bind="click: forceClosed" class="btn btn-success"><i class="icon-ok icon-white"></i> Force Closed</button>
+                    <button data-bind="click: forceHalfOpen" class="btn btn-warning"><i class="icon-headphones icon-white"></i> Force Half-Open</button>
+                    <button data-bind="click: forceOpen" class="btn btn-danger"><i class="icon-remove icon-white"></i> Force Open</button>
+                    <button data-bind="click: openLogFiles" class="btn log-files"><i class="icon-file"></i> Log Files</button>
+                </div>
+            </footer>
+        }
+    </section>
+    <div id="propertiesPopup" class="modal hide">
+        <div class="modal-header">
+            <h3>Properties</h3>
+        </div>
+        <div class="modal-body">
+            <ul data-bind="template: { name: 'propertiesTemplate', foreach: updatableProperties }" id="properties"></ul>
+        </div>
+        <div class="modal-footer">
+            <input type="button" value="Cancel" data-dismiss="modal" class="btn" />
+            <input type="button" value="Update" data-bind="click: updateProperties" class="btn btn-primary" />
+        </div>
+    </div>
+    <div id="detailsPopup" class="modal hide">
+        <div class="modal-header">
+            <h3>Details</h3>
+        </div>
+        <div class="modal-body">
+            <ul data-bind="template: { name: 'detailsTemplate', foreach: informationalProperties }" id="details"></ul>
+        </div>
+        <div class="modal-footer">
+            <input type="button" value="Cancel" data-dismiss="modal" class="btn" />
+        </div>
+    </div>
+    <div id="logFilesPopup" class="modal hide">
+        <div class="modal-header">
+            <h3>Log Files</h3>
+        </div>
+        <div class="modal-body">
+            <iframe src="@Url.Action("Index", "Logs")" width="100%" height="200"></iframe>
+        </div>
+        <div class="modal-footer">
+            <input type="button" value="Close" data-dismiss="modal" class="btn" />
+        </div>
+    </div>
+    <script type="text/html" id="circuitTemplate">
+        <li data-bind="attr: { id: id }, visible: visible, css: statusCss">
+            <div class="info">
+                <div class="host">
+                    <strong><span data-bind="text: machineName"></span></strong>
+                    (<span data-bind="text: processId"></span>)
+                </div>
+                <div data-bind="text: displayName" class="name"></div>
+                <div class="status">
+                    <span>Circuit</span>
+                    <span data-bind="text: statusDescription, style: { color: statusColor }"></span>
+                </div>
+                <div class="bar"></div>
+                <div class="line"></div>
+                <div class="stat call-duration">
+                    <span data-bind="text: averageCallDuration" class="stat-value"></span>
+                    <span class="stat-label">ms</span>
+                </div>
+                <div class="stat total-attempted">
+                    <span data-bind="text: totalAttempted" class="stat-value"></span>
+                    <span class="stat-label">attempted</span>
+                </div>
+                <div class="stat total-failed">
+                    <span data-bind="text: totalFailed" class="stat-value"></span>
+                    <span class="stat-label">failed</span>
+                </div>
+                <div class="stat total-succeeded">
+                    <span data-bind="text: totalSucceeded" class="stat-value"></span>
+                    <span class="stat-label">succeeded</span>
+                </div>
+            </div>
+            @if (Model.IsAdminRole)
+            {
+                <div class="toolbar form-inline">
+                    <button data-bind="visible: isAcceptingCommands, enable: isAcceptingCommands, click: forceClosed" class="btn btn-small" title="Force Closed"><i class="icon-ok"></i></button>
+                    <button data-bind="visible: isAcceptingCommands, enable: isAcceptingCommands, click: forceHalfOpen" class="btn btn-small" title="Force Half-Open"><i class="icon-headphones"></i></button>
+                    <button data-bind="visible: isAcceptingCommands, enable: isAcceptingCommands, click: forceOpen" class="btn btn-small" title="Force Open"><i class="icon-remove"></i></button>
+                    <button data-bind="visible: isAcceptingCommands, enable: isAcceptingCommands, click: openProperties" class="btn btn-small" title="Edit Properties"><i class="icon-cog"></i></button>
+                </div>
+            }
+        </li>
+    </script>
+    <script type="text/html" id="propertiesTemplate">
+        <li>
+            <label data-bind="text: name"></label>
+            <input type="text" data-bind="value: value" />
+        </li>
+    </script>
+    <script type="text/html" id="detailsTemplate">
+        <li>
+            <label data-bind="text: name"></label>
+            <input type="text" data-bind="value: value" readonly="readonly" />
+        </li>
+    </script>
+    <script src="~/scripts/jquery-1.9.1.js" type="text/javascript"></script>
+    <script src="~/scripts/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="~/scripts/knockout-2.2.1.js" type="text/javascript"></script>
+    <script src="~/scripts/bootstrap.js" type="text/javascript"></script>
+    <script src="~/scripts/dashboard.js" type="text/javascript"></script>
+    <script src="@Url.Content("~/signalr/hubs")" type="text/javascript"></script>
+</body>
+</html>

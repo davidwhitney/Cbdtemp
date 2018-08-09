@@ -1,0 +1,18 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Log Files</title>
+    </head>
+    <body>
+        <ul>
+            @foreach (string fileName in Model)
+            {
+                <li>@Html.ActionLink(fileName, "Download", "Logs", new { fileName }, new {})</li>
+            }
+        </ul>
+    </body>
+</html>

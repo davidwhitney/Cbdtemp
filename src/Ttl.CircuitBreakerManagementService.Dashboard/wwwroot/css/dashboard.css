@@ -1,0 +1,163 @@
+﻿#circuits header, #circuits footer
+{
+    position: fixed;
+    z-index: 1;
+    background-color: #666;
+    width: 100%;
+}
+#circuits header
+{
+    top: 0;
+}
+#circuits footer
+{
+    bottom: 0;
+}
+
+#circuitList
+{
+    overflow: hidden;
+    margin: 0;
+    padding: 40px 0;
+}
+
+.circuit
+{
+    list-style: none;
+    float: left;
+    width: 250px;
+    border: solid 2px #666;
+    border-radius: 10px;
+    margin: 10px 0 0 10px;
+    padding: 10px;
+    position: relative;
+}
+
+.circuit .info {
+    position: relative;
+    height: 220px;
+}
+.circuit .toolbar {
+    height: 26px;
+    margin: 0;
+}
+
+.bar
+{
+    position: absolute;
+    left: 0;
+    bottom: 90px;
+}
+.line
+{
+    position: absolute;
+    left: 0;
+    bottom: 10px;
+}
+
+.host
+{
+    font-weight: normal;
+    text-align: right;
+    color: #333;
+}
+
+.name
+{
+    font-weight: bold;
+    font-size: large;
+    text-align: right;
+}
+
+.status
+{
+    font-size: large;
+    text-align: right;
+    margin: 0.5em 0;
+}
+
+.stat
+{
+    text-align: right;
+}
+.stat-label
+{
+    color: #666;
+    font-size: small;
+    font-weight: normal;
+    display: inline-block;
+    width: 5em;
+    text-align: left;
+}
+
+.call-duration 
+{
+    margin-top: 29px;
+    font-size: 250%;
+    color: #333;
+}
+.call-duration .stat-label {
+    width: 2em;
+}
+
+.total-attempted
+{
+    margin-top: 15px;
+    font-size: large;
+    color: #00c;
+}
+.total-failed
+{
+    font-size: large;
+    color: #900;
+}
+.total-succeeded
+{
+    font-size: large;
+    color: #090;
+}
+
+.closed
+{
+    background-color: #d0e9c6;
+}
+.half-open
+{
+    background-color: #faf2cc;
+}
+.open
+{
+    background-color: #f99;
+}
+.dead
+{
+    background-color: #ccc;
+}
+
+.mimic {
+    border-style: dashed;
+}
+
+.toolbar
+{
+    margin: 5px;
+    color: #ccc;
+    overflow: hidden;
+}
+
+.orderBy
+{
+    float: left;
+}
+.filterBy
+{
+    float: right;
+}
+
+.log-files {
+    float: right;
+}
+
+#logFilesPopup iframe {
+    border: none;
+}
